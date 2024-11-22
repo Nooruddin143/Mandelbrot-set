@@ -1,17 +1,11 @@
 // Include important C++ libraries here
 //#include <SFML/Graphics.hpp>
-#include <iostream>
 #include "ComplexPlane.h"
-
-// Make code easier to type with "using namespace"
-using namespace sf;
-using namespace std;
-
 int main()
 {
 	// Create a video mode object
-	int pixelWidth = VideoMode::getDesktopMode().width / 2;
-	int pixelHeight = VideoMode::getDesktopMode().height / 2;
+	int pixelWidth = VideoMode::getDesktopMode().width ;
+	int pixelHeight = VideoMode::getDesktopMode().height;
 	VideoMode vm(pixelWidth, pixelHeight);
 	// Create and open a window for the game
 	RenderWindow window(vm, "Mandelbrot set", Style::Default);
@@ -22,25 +16,19 @@ int main()
 	view.setCenter(VideoMode::getDesktopMode().width / 2, VideoMode::getDesktopMode().height / 2);
 	window.setView(view);*/
 
-	// RainbowScreen rain(pixelWidth, pixelHeight);
-
 	ComplexPlane plane(pixelWidth, pixelHeight);
 	Font font;
 	if (!font.loadFromFile("timesNewRoman.ttf"))
 	{
 		cout << "Can not load the file!" << endl;
 	}
+	else {
+		cout << "loaded" << endl;
+	}
 	bool update = true;
 
 	while (window.isOpen())
 	{
-
-		/*
-		****************************************
-		Handle the players input
-		****************************************
-		*/
-
 		Event event;
 		while (window.pollEvent(event))
 		{
@@ -49,18 +37,34 @@ int main()
 			{
 				if (event.mouseButton.button == sf::Mouse::Left)
 				{
-					std::cout << "the left button was pressed" << std::endl;
-					std::cout << "mouse x: " << event.mouseButton.x << std::endl;
-					std::cout << "mouse y: " << event.mouseButton.y << std::endl;
-
+					Vector2i center = { event.mouseButton.x, event.mouseButton.y };
+					plane.zoomIn();
+					plane.setCenter(center);
 					update = true;
 				}
+				if (event.mouseButton.button == sf::Mouse::Right)
+				{
+					Vector2i center = { event.mouseButton.x, event.mouseButton.y };
+					plane.zoomOut();
+					plane.setCenter(center);
+					update = true;
+				}
+
 			}
 			// Handling if moouse moved
 			if (event.type == sf::Event::MouseMoved)
 			{
-
+				Vector2i location = {event.mouseButton.x, event.mouseButton.y };
+				plane.setMouseLocation(location);
 			}
+			/*if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
+			{
+				plane.zoomIn();
+			}
+			if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Right)
+			{
+				plane.zoomOut();
+			}*/
 		}
 		if (Keyboard::isKeyPressed(Keyboard::Escape))
 		{
@@ -86,12 +90,16 @@ int main()
 
 		window.clear();
 		// displaying text in the corner of the window
-		Text text("Mandelbrot set", font);
+		
+		//plane.zoomOut();
+		window.draw(plane);
+
+
+		/*Text text("Mandelbrot set", font);
 		text.setCharacterSize(12);
 		text.setFillColor(Color::Yellow);
-		text.setPosition(10,10);
+		text.setPosition(10, 10);*/
 
-		window.draw(plane);
 		window.display();
 	}
 }
