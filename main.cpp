@@ -74,7 +74,7 @@ int main()
 		*/
 		if (update)
 		{
-			//rain.update();
+			plane.updateRender();
 			update = false;
 		}
 
@@ -91,7 +91,7 @@ int main()
 		text.setFillColor(Color::Yellow);
 		text.setPosition(10,10);
 
-		//window.draw(rain);
+		window.draw(plane);
 		window.display();
 	}
 }
