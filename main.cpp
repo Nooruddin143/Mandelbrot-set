@@ -53,7 +53,7 @@ int main()
 			}
 			if (event.type == sf::Event::MouseMoved)
 			{
-				Vector2i location = {event.mouseButton.x, event.mouseButton.y };
+				Vector2i location = {event.mouseMove.x, event.mouseMove.y };
 				plane.setMouseLocation(location);
 			}
 		}
