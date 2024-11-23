@@ -51,20 +51,11 @@ int main()
 				}
 
 			}
-			// Handling if moouse moved
 			if (event.type == sf::Event::MouseMoved)
 			{
 				Vector2i location = {event.mouseButton.x, event.mouseButton.y };
 				plane.setMouseLocation(location);
 			}
-			/*if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
-			{
-				plane.zoomIn();
-			}
-			if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Right)
-			{
-				plane.zoomOut();
-			}*/
 		}
 		if (Keyboard::isKeyPressed(Keyboard::Escape))
 		{
@@ -76,9 +67,12 @@ int main()
 		Update the scene
 		****************************************
 		*/
+		Text text("", font);
+		plane.loadText(text);
 		if (update)
 		{
 			plane.updateRender();
+			
 			update = false;
 		}
 
@@ -89,16 +83,10 @@ int main()
 		*/
 
 		window.clear();
-		// displaying text in the corner of the window
 		
-		//plane.zoomOut();
 		window.draw(plane);
 
-
-		/*Text text("Mandelbrot set", font);
-		text.setCharacterSize(12);
-		text.setFillColor(Color::Yellow);
-		text.setPosition(10, 10);*/
+		window.draw(text);
 
 		window.display();
 	}
