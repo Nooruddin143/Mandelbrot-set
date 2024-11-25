@@ -2,7 +2,7 @@
 ComplexPlane::ComplexPlane(int pixelWidth, int pixelHeight) : m_vArray(Points, 1)
 {
 	m_pixel_size = { pixelWidth, pixelHeight };
-	m_aspectRatio = static_cast<float>(pixelHeight)/pixelWidth;
+	m_aspectRatio = static_cast<float>(pixelHeight) / pixelWidth;
 	m_plane_center = { 0,0 };
 	m_plane_size = { BASE_WIDTH, BASE_HEIGHT * m_aspectRatio };
 	m_zoomCount = 0;
@@ -60,10 +60,10 @@ void ComplexPlane::updateRender()
 			{
 				int index = j + i * m_pixel_size.x;
 
-				m_vArray[index].position = {(float)j, (float)i};
-				
+				m_vArray[index].position = { (float)j, (float)i };
+
 				Vector2i pixelCoord(j, i);
-				
+
 				Vector2f coords = mapPixelToCoords(pixelCoord);
 
 				size_t iterations = countIterations(coords);
@@ -71,10 +71,10 @@ void ComplexPlane::updateRender()
 				Uint8 r, g, b;
 
 				iterationsToRGB(iterations, r, g, b);
-
 				m_vArray[index].color = Color(r, g, b);
 			}
 		}
+
 		m_state = State::DISPLAYING;
 	}
 }
@@ -83,14 +83,16 @@ int ComplexPlane::countIterations(Vector2f coord)
 {
 	float x = 0.0f;
 	float y = 0.0f;
-
+	/*complex<float> c(coord.x, coord.y);
+	complex<float> z = c;*/
 	int iterations = 0;
 
-	while(x*x + y*y <= 4.0f && iterations < MAX_ITER)
+	while (x * x + y * y < 4.0f && iterations < MAX_ITER)
 	{
 		float tempX = x * x - y * y + coord.x;
 		y = 2.0f * x * y + coord.y;
 		x = tempX;
+		//z = z * z + c;
 		++iterations;
 	}
 	return iterations;
@@ -103,12 +105,15 @@ void ComplexPlane::iterationsToRGB(size_t count, Uint8& r, Uint8& g, Uint8& b)
 	}
 	else
 	{
-		/*r = static_cast<Uint8>((count * 20 )% 256);             
-		g = static_cast<Uint8>((count  ) % 256);        
-		b = static_cast<Uint8>((count * 1) % 256);  */    
-		r = static_cast<Uint8>((count * 10) % 256);   
-		g = static_cast<Uint8>((count * 5) % 64);    
+		/*r = static_cast<Uint8>((count * 20 )% 256);
+		g = static_cast<Uint8>((count  ) % 256);
+		b = static_cast<Uint8>((count * 1) % 256);  */
+		r = static_cast<Uint8>((count * 10) % 256);
+		g = static_cast<Uint8>((count * 5) % 64);
 		b = static_cast<Uint8>((count * 5) % 64);
+		/*r = static_cast<Uint8>(count  % 256);
+		g = static_cast<Uint8>(count  % 256);
+		b = static_cast<Uint8>(count  % 256);*/
 	}
 }
 Vector2f ComplexPlane::mapPixelToCoords(Vector2i mousePixel)

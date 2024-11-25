@@ -3,6 +3,8 @@
 #include "ComplexPlane.h"
 int main()
 {
+	//thread object
+	
 	// Create a video mode object
 	int pixelWidth = VideoMode::getDesktopMode().width ;
 	int pixelHeight = VideoMode::getDesktopMode().height;
@@ -71,6 +73,9 @@ int main()
 		plane.loadText(text);
 		if (update)
 		{
+			/*thread t1(&ComplexPlane::updateRender, &plane);
+			t1.join();*/
+
 			plane.updateRender();
 			
 			update = false;

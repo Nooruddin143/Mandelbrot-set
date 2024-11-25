@@ -1,12 +1,12 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-#include <SFML/System/Thread.hpp>
+#include <thread>
+#include <complex>
 #include <cmath>
 #include <iostream>
 #include <sstream>
 using namespace sf;
 using namespace std;
-
 
 const unsigned int MAX_ITER = 64;
 const float BASE_WIDTH = 4.0;
