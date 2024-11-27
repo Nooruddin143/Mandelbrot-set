@@ -5,13 +5,17 @@
 #include <cmath>
 #include <iostream>
 #include <sstream>
+#include <vector>
 using namespace sf;
 using namespace std;
-//all libs
-const unsigned int MAX_ITER = 5000;
+
+// Noor and Isabella team
+
+const unsigned int MAX_ITER = 64;
 const float BASE_WIDTH = 4.0;
 const float BASE_HEIGHT = 4.0;
 const float BASE_ZOOM = 0.5;
+const int NUM_THREADS = thread::hardware_concurrency();
 
 enum class State { CALCULATING, DISPLAYING };
 

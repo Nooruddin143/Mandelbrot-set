@@ -52,7 +52,7 @@ void ComplexPlane::loadText(Text& text)
 }
 void ComplexPlane::updateRender()
 {
-	if (m_state == State::CALCULATING)
+	/*if (m_state == State::CALCULATING)
 	{
 		for (int i = 0; i < m_pixel_size.y; i++)
 		{
@@ -73,6 +73,65 @@ void ComplexPlane::updateRender()
 				iterationsToRGB(iterations, r, g, b);
 				m_vArray[index].color = Color(r, g, b);
 			}
+		}
+		m_state = State::DISPLAYING;
+	}*/
+	if (m_state == State::CALCULATING)
+	{
+		
+		vector<thread> threads;
+
+		// Lambda to calculate iterations and set colors for a range of rows
+		auto calculateRange = [&](int startRow, int endRow)
+		{
+			for (int i = startRow; i < endRow; ++i)
+			{
+				for (int j = 0; j < m_pixel_size.x; ++j)
+				{
+					int index = j + i * m_pixel_size.x;
+
+					m_vArray[index].position = { (float)j, (float)i };
+
+					Vector2i pixelCoord(j, i);
+					Vector2f coords = mapPixelToCoords(pixelCoord);
+
+					// Calculate iterations and convert to color
+					size_t iterations = countIterations(coords);
+					Uint8 r, g, b;
+					iterationsToRGB(iterations, r, g, b);
+
+					// Store position and color in the vertex array
+					m_vArray[index].color = Color(r, g, b);
+				}
+			}
+		};
+
+		// Divide rows among threads
+		int rowsPerThread = m_pixel_size.y / NUM_THREADS;
+
+		for (int t = 0; t < NUM_THREADS; ++t)
+		{
+			int startRow = t * rowsPerThread;
+			int endRow;
+
+			if (t == NUM_THREADS - 1)
+			{
+				endRow = m_pixel_size.y; // Last thread gets the remainder rows
+			}
+			else
+			{
+				endRow = startRow + rowsPerThread;
+			}
+
+			// Create the thread object and add it to the vector
+			threads.push_back(thread(calculateRange, startRow, endRow));
+		}
+
+		// Wait for all threads to complete
+		for (int k = 0; k < threads.size(); ++k)//auto& thread : threads)
+		{
+			if(threads.at(k).joinable())
+				threads.at(k).join();
 		}
 
 		m_state = State::DISPLAYING;
